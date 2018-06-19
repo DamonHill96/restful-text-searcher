@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
+        <title>Text search</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel ="stylesheet" href ="style.css">
+        
+         <script>
+        var noOfFiles;
+        function doSearch(){
+            console.log ("clicked");
+            var passData = $("#searchTerm").val();
+            console.log("http://localhost:8080/Task_5/webresources/searchfile/" + passData);
+            console.log(passData);
+            
+            var i= 0;
+            //first ajax get number of files
+            $.get({
+                url: 'http://localhost:8080/Task_5/webresources/getfiles/',
+                dataType: 'xml',
+                async: false,
+                success : function (result){
+                    console.log(result);
+                    noOfFiles = parseInt($(result).find("nooffiles").html());
+                    
+                }
+            });
+            
+            
+            for (i = 0; i < noOfFiles; i++){
+                 console.log("no of files: " + noOfFiles);
+            $.get({
+               
+                url: 'http://localhost:8080/Task_5/webresources/searchfile/' +passData,
+                data: {index: 0 },
+                dataType: 'xml',
+                success : function(result){
+                     console.log(noOfFiles);
+                     console.log(result);
+                     var final = $(result).find("result").html();
+                     
+                     console.log(final); //selects the full sentence and found message
+                     
+                     $('#result').html(final);
+                }
+                
+            
+            });
+        }
+        };
+   
+        </script>
+    </head>
+    <body>
+<!--        Gets user directory-->
+       
+      
+        <div><h1>Text File Searcher</h1></div>
+        <div><h1>Task 5</h1></div>
+        
+        <input type ="text" id ="searchTerm">
+        <button id = "doSearch" onclick="doSearch()" >Search!</button>
+        <div id ="result"></div>
+        <h2>IMPORTANT! README!</h2>
+        <p>This site reads files that are placed in your user directory</p> 
+        <p>Like task 4, make sure text files are in the user directory!</p>
+    </body>
+</html>
